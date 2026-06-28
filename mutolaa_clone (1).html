@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mutolaa | Eng sara audio va elektron kitoblar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.1);
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --text: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --shadow: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: 0.3s; }
+        a { text-decoration: none; color: inherit; }
+        button { cursor: pointer; border: none; background: none; font-family: inherit; }
+        img { max-width: 100%; display: block; }
+        ul { list-style: none; }
+
+        /* Navbar */
+        .navbar {
+            position: sticky; top: 0; z-index: 100;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+        .nav-container { max-width: 1280px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 68px; }
+        .logo { font-size: 1.6rem; font-weight: 800; color: var(--primary); letter-spacing: -1px; }
+        .nav-center { display: flex; align-items: center; gap: 32px; }
+        .nav-links { display: flex; gap: 24px; }
+        .nav-links a { font-size: 0.95rem; font-weight: 500; color: var(--text-secondary); transition: 0.2s; }
+        .nav-links a:hover { color: var(--primary); }
+        .search-box { position: relative; }
+        .search-box input { width: 320px; padding: 10px 16px 10px 40px; border-radius: 50px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.9rem; outline: none; transition: 0.2s; }
+        .search-box input:focus { border-color: var(--primary); }
+        .search-box svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
+        .nav-actions { display: flex; align-items: center; gap: 16px; }
+        .icon-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--bg); border: 1px solid var(--border); color: var(--text); transition: 0.2s; }
+        .icon-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .btn { padding: 10px 22px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; transition: 0.2s; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-free { background: #22c55e; color: #fff; font-weight: 700; }
+        .btn-free:hover { background: #16a34a; }
+        .mobile-menu-btn { display: none; }
+
+        /* Hero */
+        .hero { background: var(--surface); padding: 80px 24px; text-align: center; border-bottom: 1px solid var(--border); }
+        .hero h1 { font-size: 3rem; font-weight: 800; margin-bottom: 16px; }
+        .hero p { font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 32px; }
+        .hero .btn-primary { padding: 14px 36px; font-size: 1rem; }
+        .hero-badge { display: inline-block; background: #22c55e; color: #fff; padding: 6px 18px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; margin-bottom: 20px; }
+
+        /* Sections */
+        .section { max-width: 1280px; margin: 0 auto; padding: 60px 24px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+        .section-title { font-size: 1.5rem; font-weight: 700; }
+        .see-all { color: var(--primary); font-weight: 600; font-size: 0.9rem; }
+
+        /* Categories */
+        .categories { display: flex; flex-wrap: wrap; gap: 10px; }
+        .category-chip {
+            padding: 8px 18px; border-radius: 50px; border: 1px solid var(--border);
+            background: var(--surface); color: var(--text-secondary); font-size: 0.85rem; font-weight: 500;
+            transition: 0.2s; cursor: pointer;
+        }
+        .category-chip:hover, .category-chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        /* Book Grid */
+        .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 24px; }
+        .book-card { background: var(--surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: 0.3s; cursor: pointer; border: 1px solid var(--border); }
+        .book-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+        .book-cover { width: 100%; aspect-ratio: 2/3; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: relative; overflow: hidden; }
+        .book-cover img { width: 100%; height: 100%; object-fit: cover; }
+        .book-badge { position: absolute; top: 10px; left: 10px; background: #22c55e; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 50px; }
+        .book-info { padding: 14px; }
+        .book-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .book-author { font-size: 0.8rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* Collections */
+        .collection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .collection-card {
+            background: var(--surface); border-radius: var(--radius); padding: 24px;
+            border: 1px solid var(--border); box-shadow: var(--shadow); transition: 0.3s; cursor: pointer;
+        }
+        .collection-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+        .collection-icon { width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, var(--primary), #60a5fa); display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+        .collection-icon svg { color: #fff; }
+        .collection-name { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+        .collection-count { font-size: 0.85rem; color: var(--text-secondary); }
+
+        /* Authors */
+        .author-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; }
+        .author-card { text-align: center; }
+        .author-avatar { width: 100px; height: 100px; border-radius: 50%; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #fff; font-weight: 700; }
+        .author-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 2px; }
+        .author-books { font-size: 0.8rem; color: var(--text-secondary); }
+
+        /* Footer */
+        .footer { background: var(--surface); border-top: 1px solid var(--border); padding: 60px 24px 30px; }
+        .footer-container { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+        .footer-brand .logo { margin-bottom: 12px; display: inline-block; }
+        .footer-brand p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; }
+        .footer-title { font-weight: 700; margin-bottom: 16px; font-size: 1rem; }
+        .footer-links li { margin-bottom: 10px; }
+        .footer-links a { color: var(--text-secondary); font-size: 0.9rem; transition: 0.2s; }
+        .footer-links a:hover { color: var(--primary); }
+        .footer-bottom { max-width: 1280px; margin: 40px auto 0; padding-top: 24px; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); font-size: 0.85rem; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .nav-links { display: none; }
+            .search-box input { width: 200px; }
+            .footer-container { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .search-box { display: none; }
+            .mobile-menu-btn { display: flex; }
+            .nav-actions .btn { display: none; }
+            .footer-container { grid-template-columns: 1fr; }
+            .book-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">Mutolaa</a>
+            <div class="nav-center">
+                <ul class="nav-links">
+                    <li><a href="#">Asosiy sahifa</a></li>
+                    <li><a href="#">To'plamlar</a></li>
+                    <li><a href="#">Mutolaa Market</a></li>
+                    <li><a href="#">Mutolaaxona</a></li>
+                    <li><a href="#">Bepul</a></li>
+                </ul>
+                <div class="search-box">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                    <input type="text" placeholder="Kitob yoki muallifni izlang...">
+                </div>
+            </div>
+            <div class="nav-actions">
+                <button class="icon-btn" id="themeToggle" title="Tungi rejim">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                </button>
+                <button class="icon-btn mobile-menu-btn">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+                </button>
+                <a href="#" class="btn btn-primary">Kirish</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <span class="hero-badge">BARCHA KITOBLAR BEPUL</span>
+        <h1>Mutolaa zavqini kashf eting</h1>
+        <p>O'qing. Tinglang. Fikrlang. Eng yaxshi kitoblar doim yoningizda — mutlaqo bepul!</p>
+        <a href="#" class="btn btn-primary">Mutolaani boshlash</a>
+    </section>
+
+    <!-- Categories -->
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">Ruknlar</h2>
+            <a href="#" class="see-all">Barchasi &rarr;</a>
+        </div>
+        <div class="categories">
+            <span class="category-chip active">Roman</span>
+            <span class="category-chip">Qissa</span>
+            <span class="category-chip">Shaxsiy rivojlanish</span>
+            <span class="category-chip">Folklor</span>
+            <span class="category-chip">Ertak</span>
+            <span class="category-chip">Detektiv</span>
+            <span class="category-chip">Darslik</span>
+            <span class="category-chip">1000KITOB</span>
+            <span class="category-chip">She'r</span>
+            <span class="category-chip">Jahon adabiyoti</span>
+            <span class="category-chip">O'zbek adabiyoti</span>
+            <span class="category-chip">Bolalar adabiyoti</span>
+            <span class="category-chip">Fantastika</span>
+            <span class="category-chip">Tarixiy</span>
+            <span class="category-chip">Biografik</span>
+            <span class="category-chip">Diniy-ma'rifiy</span>
+            <span class="category-chip">Sarguzasht</span>
+            <span class="category-chip">Hikoya</span>
+            <span class="category-chip">Doston</span>
+            <span class="category-chip">Rivoyat</span>
+            <span class="category-chip">Hajviy</span>
+            <span class="category-chip">Ma'rifiy</span>
+            <span class="category-chip">Mumtoz adabiyot</span>
+            <span class="category-chip">Uyg'onish</span>
+            <span class="category-chip">Esse</span>
+            <span class="category-chip">Badiiy-publitsistik</span>
+            <span class="category-chip">Ilmiy-ommabop</span>
+            <span class="category-chip">Masal</span>
+            <span class="category-chip">Jadidlar</span>
+            <span class="category-chip">Konstitutsiya</span>
+        </div>
+    </section>
+
+    <!-- New Books -->
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">Yangi kitoblar</h2>
+            <a href="#" class="see-all">Barchasi &rarr;</a>
+        </div>
+        <div class="book-grid">
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+                    <span class="book-badge">BEPUL</span>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">O'tamdan qolgan dalalar</div>
+                    <div class="book-author">Tog'ay Murod</div>
+                </div>
+            </div>
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);">
+                    <span class="book-badge">BEPUL</span>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">Gullarni sevgan yigit</div>
+                    <div class="book-author">Stiven King</div>
+                </div>
+            </div>
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);">
+                    <span class="book-badge">BEPUL</span>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">O'g'irlangan surat</div>
+                    <div class="book-author">Edgar Uolles</div>
+                </div>
+            </div>
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">
+                    <span class="book-badge">BEPUL</span>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">Kitobdorning o'limi</div>
+                    <div class="book-author">Styuart Melvin</div>
+                </div>
+            </div>
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <span class="book-badge">BEPUL</span>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">Basseyn</div>
+                    <div class="book-author">Robert Artur</div>
+                </div>
+            </div>
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);">
+                    <span class="book-badge">BEPUL</span>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">Kutilmagan sovg'a</div>
+                    <div class="book-author">Richard Mateson</div>
+                </div>
+            </div>
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);">
+                    <span class="book-badge">BEPUL</span>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">Uzuk</div>
+                    <div class="book-author">Maykl Mellori</div>
+                </div>
+            </div>
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);">
+                    <span class="book-badge">BEPUL</span>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">Temir xonim</div>
+                    <div class="book-author">Richard Laymon</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Collections -->
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">To'plamlar</h2>
+            <a href="#" class="see-all">Barchasi &rarr;</a>
+        </div>
+        <div class="collection-grid">
+            <div class="collection-card">
+                <div class="collection-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+                <div class="collection-name">1000Kitob</div>
+                <div class="collection-count">1000+ kitob</div>
+            </div>
+            <div class="collection-card">
+                <div class="collection-icon" style="background: linear-gradient(135deg, #f093fb, #f5576c);"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a3 3 0 013 3v7a3 3 0 01-6 0V5a3 3 0 013-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+                <div class="collection-name">Tovushbezakli audiokitoblar</div>
+                <div class="collection-count">250+ audio</div>
+            </div>
+            <div class="collection-card">
+                <div class="collection-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe);"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+                <div class="collection-name">Hilol nashr</div>
+                <div class="collection-count">150+ kitob</div>
+            </div>
+            <div class="collection-card">
+                <div class="collection-icon" style="background: linear-gradient(135deg, #43e97b, #38f9d7);"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+                <div class="collection-name">Bolalar uchun</div>
+                <div class="collection-count">300+ kitob</div>
+            </div>
+            <div class="collection-card">
+                <div class="collection-icon" style="background: linear-gradient(135deg, #fa709a, #fee140);"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+                <div class="collection-name">Sevimlilar</div>
+                <div class="collection-count">500+ kitob</div>
+            </div>
+            <div class="collection-card">
+                <div class="collection-icon" style="background: linear-gradient(135deg, #a8edea, #fed6e3);"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+                <div class="collection-name">Bukhara Books</div>
+                <div class="collection-count">80+ kitob</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Books -->
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">Mashhur kitoblar</h2>
+            <a href="#" class="see-all">Barchasi &rarr;</a>
+        </div>
+        <div class="book-grid">
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);">
+                    <span class="book-badge">BEPUL</span>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">Sarob</div>
+                    <div class="book-author">Abdulla Qahhor</div>
+                </div>
+            </div>
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);">
+                    <span class="book-badge">BEPUL</span>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">Kecha va kunduz</div>
+                    <div class="book-author">Abdulla Qahhor</div>
+                </div>
+            </div>
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);">
+                    <span class="book-badge">BEPUL</span>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">Chinor</div>
+                    <div class="book-author">O'tkir Hoshimov</div>
+                </div>
+            </div>
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);">
+                    <span class="book-badge">BEPUL</span>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">Dunyoning ishlari</div>
+                    <div class="book-author">O'tkir Hoshimov</div>
+                </div>
+            </div>
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <span class="book-badge">BEPUL</span>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">Ikki eshik orasi</div>
+                    <div class="book-author">O'tkir Hoshimov</div>
+                </div>
+            </div>
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+                    <span class="book-badge">BEPUL</span>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">Ufq romani</div>
+                    <div class="book-author">O'tkir Hoshimov</div>
+                </div>
+            </div>
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);">
+                    <span class="book-badge">BEPUL</span>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">Sinchalak</div>
+                    <div class="book-author">Said Ahmad</div>
+                </div>
+            </div>
+            <div class="book-card">
+                <div class="book-cover" style="background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);">
+                    <span class="book-badge">BEPUL</span>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">Navoiy</div>
+                    <div class="book-author">Oybek</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Authors -->
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">Mashhur mualliflar</h2>
+            <a href="#" class="see-all">Barchasi &rarr;</a>
+        </div>
+        <div class="author-grid">
+            <div class="author-card">
+                <div class="author-avatar" style="background: linear-gradient(135deg, #ff9a9e, #fecfef);">XO</div>
+                <div class="author-name">Xalq og'zaki ijodi</div>
+                <div class="author-books">159 kitob</div>
+            </div>
+            <div class="author-card">
+                <div class="author-avatar" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb);">EX</div>
+                <div class="author-name">Ertak</div>
+                <div class="author-books">122 kitob</div>
+            </div>
+            <div class="author-card">
+                <div class="author-avatar" style="background: linear-gradient(135deg, #84fab0, #8fd3f4);">SH</div>
+                <div class="author-name">Shukur Xolmirzayev</div>
+                <div class="author-books">84 kitob</div>
+            </div>
+            <div class="author-card">
+                <div class="author-avatar" style="background: linear-gradient(135deg, #f6d365, #fda085);">AO</div>
+                <div class="author-name">Anvar Obidjon</div>
+                <div class="author-books">65 kitob</div>
+            </div>
+            <div class="author-card">
+                <div class="author-avatar" style="background: linear-gradient(135deg, #667eea, #764ba2);">MM</div>
+                <div class="author-name">Malik Murodov</div>
+                <div class="author-books">58 kitob</div>
+            </div>
+            <div class="author-card">
+                <div class="author-avatar" style="background: linear-gradient(135deg, #ffecd2, #fcb69f);">AC</div>
+                <div class="author-name">Anton Chexov</div>
+                <div class="author-books">51 kitob</div>
+            </div>
+            <div class="author-card">
+                <div class="author-avatar" style="background: linear-gradient(135deg, #a1c4fd, #c2e9fb);">SS</div>
+                <div class="author-name">Shayx M.S. Yusuf</div>
+                <div class="author-books">40 kitob</div>
+            </div>
+            <div class="author-card">
+                <div class="author-avatar" style="background: linear-gradient(135deg, #fbc2eb, #a6c1ee);">AQ</div>
+                <div class="author-name">Abdulla Qahhor</div>
+                <div class="author-books">34 kitob</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <a href="#" class="logo">Mutolaa</a>
+                <p>Eng sara kitoblarning elektron, audio va video shakldagi sifatli va tizimli platformasi. O'qing, tinglang, fikrlang — barchasi bepul!</p>
+            </div>
+            <div>
+                <div class="footer-title">Platforma</div>
+                <ul class="footer-links">
+                    <li><a href="#">Asosiy sahifa</a></li>
+                    <li><a href="#">Kitoblar</a></li>
+                    <li><a href="#">Audiokitoblar</a></li>
+                    <li><a href="#">Mualliflar</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-title">Kompaniya</div>
+                <ul class="footer-links">
+                    <li><a href="#">Biz haqimizda</a></li>
+                    <li><a href="#">Hamkorlar</a></li>
+                    <li><a href="#">Aloqa</a></li>
+                    <li><a href="#">Karyera</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-title">Qo'llab-quvvatlash</div>
+                <ul class="footer-links">
+                    <li><a href="#">Yordam markazi</a></li>
+                    <li><a href="#">Foydalanish shartlari</a></li>
+                    <li><a href="#">Maxfiylik siyosati</a></li>
+                    <li><a href="#">Bepul yuklab olish</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2025 Mutolaa. Barcha kitoblar bepul. Barcha huquqlar himoyalangan.
+        </div>
+    </footer>
+
+    <script>
+        // Dark mode toggle
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.toggleAttribute('data-theme', document.documentElement.getAttribute('data-theme') !== 'dark');
+            localStorage.setItem('theme', document.documentElement.getAttribute('data-theme') || 'light');
+        });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+
+        // Category chip click
+        document.querySelectorAll('.category-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
